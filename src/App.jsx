@@ -9,6 +9,8 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import LoginForm from "./Components/Users/LoginForm";
 import SignupForm from "./Components/Users/SignupForm";
 import CartPage from "./Components/Cart/Cartpage";
+import toast, { Toaster } from 'react-hot-toast'
+import ProductPage from "./Components/Home/Products/Productspage";
 
 function App() {
   const { scrollYProgress } = useScroll();
@@ -50,11 +52,13 @@ const MainLayout = ({ scaleX }) => {
       <Routes>
         <Route index path="/" element={<Home />} />
         <Route path="/shop" element={<Lists />} />
+        <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/cart" element={<CartPage />} />
       </Routes>
       <Footer />
+      <Toaster />
     </div>
   );
 }

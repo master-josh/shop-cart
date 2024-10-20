@@ -1,10 +1,15 @@
 import React from 'react';
 import Cartimage from '../../../public/time/empty-cart.png'
+import { useDispatch, useSelector } from 'react-redux';
+import {removeFromCart, increaseQuantity, decreaseQuantity} from '../../Redux/CartSplice';
+
 
 const CartPage = () => {
-  const cartItems = []; 
-  const calculateTotal = () =>
-    cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  const cartItems = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -43,11 +48,11 @@ const CartPage = () => {
                         <h2 className="text-xl font-semibold">{item.name}</h2>
                         <p className="text-gray-600">Price: ${item.price}</p>
                         <div className="flex items-center mt-2">
-                          <button className="bg-primary-green text-white px-3 py-1 rounded-l-md hover:bg-green-700 transition duration-300">
+                          <button className="bg-primary-green text-white px-3 py-1 rounded-l-md hover:bg-green-700 transition duration-300" onClick={() => dispatch(decreaseQuantity(item.id))}>
                             -
                           </button>
                           <span className="px-4 py-2 border border-gray-300">{item.quantity}</span>
-                          <button className="bg-primary-green text-white px-3 py-1 rounded-r-md hover:bg-green-700 transition duration-300">
+                          <button className="bg-primary-green text-white px-3 py-1 rounded-r-md hover:bg-green-700 transition duration-300" onClick={() => dispatch(increaseQuantity(item.id))}>
                             +
                           </button>
                         </div>
@@ -55,9 +60,9 @@ const CartPage = () => {
                     </div>
                     <div>
                       <p className="text-xl font-semibold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ${item.price * item.quantity}
                       </p>
-                      <button className="text-red-500 hover:underline mt-2">Remove</button>
+                      <button className="bg-red-500 hover:bg-red-600 text-gray-100 e mt-2 p-3 rounded-lg w-[7rem]" onClick={() => dispatch(removeFromCart(item.id))}>Remove</button>
                     </div>
                   </div>
                 ))}
@@ -69,11 +74,11 @@ const CartPage = () => {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <p className="text-gray-600">Total Items</p>
-                  <p>{cartItems.reduce((total, item) => total + item.quantity, 0)}</p>
+                  <p>{totalItems}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-gray-600">Total Cost</p>
-                  <p className="text-xl font-bold">${calculateTotal()}</p>
+                  <p className="text-xl font-bold">${totalPrice}</p>
                 </div>
               </div>
               <button className="w-full mt-6 bg-primary-green text-white py-3 rounded-lg shadow-md hover:bg-green-700 transition duration-300">

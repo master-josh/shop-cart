@@ -4,59 +4,69 @@ import { CiUser } from "react-icons/ci";
 import { IoCartOutline } from "react-icons/io5";
 import { LuMenu } from "react-icons/lu";
 import Logo from "../../../public/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../Redux/CartSplice";
+import { Link } from "react-router-dom";
 
 const products = [
   {
     id: 1,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
-    rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    name: "Optimum Nutrition Gold Standard Whey",
+    price: 4999,
+    rating: 4.8,
+    reviews: 16000,
+    quantity: 1,
+    image:
+      "https://via.placeholder.com/200x200?text=Optimum+Nutrition+Gold+Standard",
   },
   {
     id: 2,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
-    rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    name: "Dymatize ISO100 Hydrolyzed Protein",
+    price: 6499,
+    rating: 4.7,
+    reviews: 9200,
+    quantity: 1,
+    image: "https://via.placeholder.com/200x200?text=Dymatize+ISO100",
   },
   {
     id: 3,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
-    rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    name: "MuscleTech NitroTech Whey Protein",
+    price: 5299,
+    rating: 4.6,
+    reviews: 8500,
+    quantity: 1,
+    image: "https://via.placeholder.com/200x200?text=MuscleTech+NitroTech",
   },
   {
     id: 4,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
+    name: "BSN Syntha-6 Protein Powder",
+    price: 4499,
     rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    reviews: 5700,
+    quantity: 1,
+    image: "https://via.placeholder.com/200x200?text=BSN+Syntha-6",
   },
   {
     id: 5,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
-    rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    name: "Cellucor COR-Performance Whey Protein",
+    price: 3999,
+    rating: 4.4,
+    reviews: 3400,
+    quantity: 1,
+    image: "https://via.placeholder.com/200x200?text=Cellucor+COR-Performance",
   },
   {
     id: 6,
-    name: "Gold Standard Whey Protein",
-    price: 2399,
-    rating: 4.5,
-    reviews: 350,
-    image: "https://via.placeholder.com/200/200",
+    name: "MyProtein Impact Whey Isolate",
+    price: 2999,
+    rating: 4.3,
+    reviews: 7800,
+    quantity: 1,
+    image: "https://via.placeholder.com/200x200?text=MyProtein+Impact+Whey",
   },
 ];
 
-const Header = ({ toggleSidebar }) => (
+const Header = ({ toggleSidebar, Cartitems }) => (
   <header className="bg-white text-black px-4 py-3 mx-auto sticky top-0 z-50">
     <div className="container flex justify-between items-center ">
       <div className="flex items-center">
@@ -73,7 +83,10 @@ const Header = ({ toggleSidebar }) => (
       </nav>
 
       <div className="flex items-center space-x-4">
-        <IoCartOutline className="cursor-pointer text-4xl" />
+        <Link to="/cart" className="flex items-center space-x-2">
+          <IoCartOutline className="cursor-pointer text-4xl" />
+          <span>{Cartitems.length}</span>
+        </Link>
         <CiUser className="cursor-pointer text-4xl" />
         <LuMenu
           className="md:hidden cursor-pointer text-4xl"
@@ -138,7 +151,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => (
   </div>
 );
 
-const ProductCard = ({ product }) => (
+const ProductCard = ({ product, useDispatch }) => (
   <div className="bg-white p-4 rounded-lg shadow hover:border-green-500 border-2 ">
     <div className="relative ">
       <img
@@ -148,7 +161,12 @@ const ProductCard = ({ product }) => (
       />
       <Heart className="absolute top-2 right-2 cursor-pointer text-green-600" />
     </div>
-    <h3 className="font-semibold mb-2">{product.name}</h3>
+    <Link
+      to={`/product/${product.id}`}
+      className="text-green-600 hover:underline"
+    >
+      <h3 className="font-semibold mb-2">{product.name}</h3>
+    </Link>
     <div className="flex items-center mb-2">
       {[...Array(5)].map((_, i) => (
         <svg
@@ -162,16 +180,19 @@ const ProductCard = ({ product }) => (
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
-      <span className="text-sm text-gray-600 ml-2">({product.reviews})</span> 
+      <span className="text-sm text-gray-600 ml-2">({product.reviews})</span>
     </div>
     <p className="font-bold mb-2">${product.price}</p>
-    <button className="w-full bg-green-600 text-white py-2 rounded">
+    <button
+      className="w-full bg-green-600 text-white py-2 rounded"
+      onClick={() => useDispatch(addToCart(product))}
+    >
       Add to cart
     </button>
   </div>
 );
 
-const ProductList = () => (
+const ProductList = ({ useDispatch }) => (
   <div className="flex-1 hover:border-green-500 ">
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
       <h2 className="font-bold mb-2 sm:mb-0">Product List (56)</h2>
@@ -184,25 +205,31 @@ const ProductList = () => (
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard
+          key={product.id}
+          product={product}
+          useDispatch={useDispatch}
+        />
       ))}
     </div>
   </div>
 );
 
-const ResponsiveProductListPage = () => {
+const ProductLists = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  const dispatch = useDispatch();
+  const Cartitems = useSelector((state) => state.cart.cart);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header toggleSidebar={toggleSidebar} />
+      <Header toggleSidebar={toggleSidebar} Cartitems={Cartitems} />
       <div className="container mx-auto p-4">
         <div className="flex flex-col md:flex-row">
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
           <div className="flex-1 md:ml-6 mt-6 md:mt-0">
-            <ProductList />
+            <ProductList useDispatch={dispatch} />
           </div>
         </div>
       </div>
@@ -216,4 +243,4 @@ const ResponsiveProductListPage = () => {
   );
 };
 
-export default ResponsiveProductListPage;
+export default ProductLists;

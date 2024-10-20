@@ -5,6 +5,7 @@ import { IoCartOutline } from "react-icons/io5";
 import Logo from "../../../public/logo.svg";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,6 +13,9 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const dispatch = useDispatch();
+  const Cartitems = useSelector((state) => state.cart.cart);
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-40">
@@ -30,7 +34,7 @@ const Navbar = () => {
           />
           <FaSearch className="text-gray-500" />
         </div>
-
+        
         <div className="hidden lg:flex items-center space-x-6 font-semibold ">
           <div className="relative group">
             <button className="text-gray-700 hover:text-green-800">
@@ -69,10 +73,11 @@ const Navbar = () => {
           </Link>
           <Link
             to="/cart"
-            className="text-gray-700 hover:text-green-600 flex items-center"
+            className="text-gray-700 hover:text-green-600 flex items-center gap-2"
           >
             <IoCartOutline className="text-4xl" />
             Cart
+            <span>{Cartitems.length}</span>
           </Link>
         </div>
 
